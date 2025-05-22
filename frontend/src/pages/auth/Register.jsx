@@ -1,14 +1,15 @@
 import RegisterForm from '../../components/Auth/RegisterForm';
 
 export default function Register() {
-  return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    return (
+        <div className="flex h-screen">
+            {/* Sección con el formulario a la izquierda */}
+            <div className="w-full md:w-1/2 flex items-center justify-center p-4">
+                <RegisterForm />
+            </div>
 
-      
-
-      <div className="backdrop-blur-[20px] bg-white/30 p-8 rounded-2xl shadow-lg w-full max-w-2xl">
-        <RegisterForm />
-      </div>
-    </div>
-  );
+            {/* Sección visual gris a la derecha */}
+            <div className="w-1/2 bg-gray-100 hidden md:block"></div>
+        </div>
+    );
 }

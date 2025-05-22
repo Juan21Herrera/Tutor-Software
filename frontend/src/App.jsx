@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/global/Home'
 import Register from './pages/auth/Register'
+import Login from './pages/auth/Login'
+import Classes from './pages/student/Classes'
 import './App.css'
 
 function App() {
@@ -12,7 +14,7 @@ function App() {
 
         {/* Public Routes */}
         <Route path="/" element={<Home />}/>
-        {/* <Route path="/login" element={<Login />}/> */}
+        <Route path="/login" element={<Login />}/>
         <Route path="/register" element={<Register />}/>
         {/* <Route path="/forgot" element={<Forgot />}/> */}
 
@@ -20,15 +22,15 @@ function App() {
         {/* <Route path="/profile" element={<Profile />}/> */}
 
         {/* Student Routes */}
-        {/* <Route path="/student/diagnostic" element={<Diagnostic />}/>
-        <Route path="/student/evaluation" element={<Evaluation />}/>
-        <Route path="/student/learning" element={<Learning />}/>
-        <Route path="/student/exercises" element={<Excercises />}/>
-        <Route path="/student/recommendation" element={<Recommendation />}/>
-        <Route path="/student/classes" element={<Classes />}/> */}
+        {/* <Route path="/diagnostic" element={<Diagnostic />}/>
+        <Route path="/evaluation" element={<Evaluation />}/>
+        <Route path="/learning" element={<Learning />}/>
+        <Route path="/exercises" element={<Excercises />}/>
+        <Route path="/recommendation" element={<Recommendation />}/> */}
+        <Route path="/classes" element={<Classes />}/>
 
         {/* Admin Routes */}
-        {/* <Route path="/admin/dashboard" element={<Dashboard />}/> */}
+        {/* <Route path="/dashboard" element={<Dashboard />}/> */}
       </Routes>
       
     </Router>
