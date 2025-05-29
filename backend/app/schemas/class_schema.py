@@ -10,6 +10,7 @@ class ClassBase(BaseModel):
     exercises: Optional[str] = None # JSON String
     exams: Optional[str] = None # JSON String
     recommendations: Optional[str] = None # JSON String
+    is_active: Optional[bool] = True
 
 class ClassUpdate(BaseModel):
     title: Optional[str] = None

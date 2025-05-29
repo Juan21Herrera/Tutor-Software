@@ -2,51 +2,39 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/nav/Header";
 import Footer from "../../components/nav/Footer";
+import axios from "axios";
 
 export default function Classes() {
-    const navigate = useNavigate();
     const [classes, setClasses] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            navigate("/login");
-            return;
-        }
+        axios.get("http://localhost:8000/classes")
+            .then(res => {
+                setClasses(res.data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Error al obtener las clases:", err);
+                alert(err?.response?.data?.detail || "Error al cargar las clases");
+                setLoading(false);
+            });
+    }, []);
 
-        fetch("http://localhost:8000/classes/read", {
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-    })
-        .then(res => res.json())
-        .then(data => setClasses(data))
-        .catch(err => console.error("Error al cargar las clases:", err));
-    }, [navigate]);
+    if (loading) return <p className="text-center mt-10">Cargando clases...</p>
 
     return (
         <section>
-        <Header />
-        <div className="min-h-screen bg-gray-100 p-8">
-            <h1 className="text-4xl font-bold text-blue-600 mb-6">Tus Clases</h1>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Classes Map */}
-                {classes.map((cls, index) => (
-                    <div 
-                        key={index}
-                        className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
-                    >
-                        <h2 className="text-2xl font-semibold mb-2">{cls.name}</h2>
-                        <p className="text-gray-600">{cls.description}</p>
-                        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-                            Ver clase
-                        </button>
-                    </div>
-                ))}
+            <Header />
+            <div className="max-w-4xl mx-auto p-6 space-y-6">
+                <h1 className="text-4xl font-bold text-center text-gray-800">Clases disponibles</h1>
+                {classes.length === 0 ? (
+                    <p className="text-center text-gray-500">No hay clases disponibles.</p>
+                ) : (
+                    classes.map(classItem => <ClassCard key={classItem.id} classItem={classItem} />)
+                )}
             </div>
-        </div>
-        <Footer />
+            <Footer />
         </section>
     );
 }

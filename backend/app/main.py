@@ -6,6 +6,8 @@ from app.db.database import Base, engine
 from app.routes import class_router
 from app.routes import progress
 
+
+
 def create_tables():
     Base.metadata.create_all(bind=engine)
 create_tables()
