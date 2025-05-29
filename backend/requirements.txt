@@ -13,3 +13,5 @@ pydantic[email]
 pytest
 pytest-asyncio
 httpx
+bcrypt
+alembic

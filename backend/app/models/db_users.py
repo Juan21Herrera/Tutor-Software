@@ -17,3 +17,4 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
     status = Column(Boolean, default=True)
     progress = relationship("StudentProgress", back_populates="user", uselist=False)
+    courses = relationship("Course", back_populates="teacher")

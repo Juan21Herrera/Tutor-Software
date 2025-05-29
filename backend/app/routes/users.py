@@ -6,6 +6,10 @@ from sqlalchemy.orm import Session
 from app.models import db_users
 from passlib.context import CryptContext
 from app.routes.auth import create_access_token, verify_password, hash_password
+from app.schemas.users import UserOut
+from app.routes.auth import get_current_user
+from app.models.db_progress import StudentProgress
+from app.models.db_courses import Course
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -56,7 +60,7 @@ def login_user(user_login: UserLogin, db: Session = Depends(get_db)):
             detail="User not found"
         )
     
-    token = create_access_token(data={"sub": user.email, "name": user.name})
+    token = create_access_token(data={"sub": str(user.id)})
     return {"access_token": token, "token_type": "bearer"}
 
 # Get User by ID
@@ -89,3 +93,41 @@ def update_user(user_id: int, user: User, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(existing_user)
     return {"message": "User updated successfully"}
+
+@router.get("/profile", response_model=UserOut)
+def get_profile(current_user: UserModel = Depends(get_current_user), db: Session = Depends(get_db)):
+    if current_user.role.lower() == "estudiante":
+        progress = db.query(StudentProgress).filter(StudentProgress.user_id == current_user.id).first()
+        return {
+            "role": "Estudiante",
+            "profile": {
+                "id": current_user.id,
+                "name": current_user.name,
+                "last_name": current_user.last_name,
+                "email": current_user.email,
+                "type_document": current_user.type_document,
+                "document": current_user.document,
+                "group": current_user.group,
+                "status": current_user.status,
+                "created_at": current_user.created_at,
+            },
+            "progress": progress.progress if progress else None,
+            "comments": progress.comments if progress and progress.comments else None
+        }
+    elif current_user.role.lower() == "profesor":
+        courses = db.query(Course).filter(Course.teacher_id == current_user.id).all()
+        return {
+            "role": "Profesor",
+            "profile": {
+                "id": current_user.id,
+                "name": current_user.name,
+                "last_name": current_user.last_name,
+                "email": current_user.email,
+                "type_document": current_user.type_document,
+                "document": current_user.document,
+                "status": current_user.status,
+                "created_at": current_user.created_at,
+            },
+            "courses": [{"id": course.id, "title": course.title, "students": course.students} for course in courses]
+        }
+    raise HTTPException(status_code=400, detail="Invalid role")

@@ -9,6 +9,7 @@ from typing import Optional
 class User(BaseModel):
     id: int
     name: str
+    last_name: str
     email: str
     password: str
     created_at: datetime = datetime.now()
@@ -37,3 +38,15 @@ class UserCreate(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+class UserOut(BaseModel):
+    id: int
+    name: str
+    last_name: str
+    email: EmailStr
+    type_document: str
+    document: int
+    group: Optional[str]
+    role: str
+    status: bool
+    created_at: datetime

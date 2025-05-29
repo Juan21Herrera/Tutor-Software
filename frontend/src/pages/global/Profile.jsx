@@ -1,105 +1,80 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Profile() {
-    const [user, setUser] = useState(null);
-    const [progress, setProgress] = useState(0);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const storedUser = JSON.parse(localStorage.getItem("user"));
-        const token = localStorage.getItem("token");
-
-        if (!storedUser || !token) {
-            navigate("/login");
-        } else {
-            setUser(storedUser);
-            setEmail(storedUser.email);
-            
-
-            axios
-                .get(`http://localhost:8000/progress/${storedUser.id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-
-                .then((res) => setProgress(res.data.progress))
-                .catch((err) => console.error("Error al obtener progreso:", err));
+  // Simula obtener el token y hacer la petición al backend
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setLoading(false);
+          return;
         }
-    }, []);
 
-    const handleUpdate = async () => {
-        const token = localStorage.getItem("token");
-        try {
-            const res = await axios.put(
-                `http://localhost:8000/user/${user.id}`,
-                { email, password },
-                { headers: { Authorization: `Bearer ${token}`}}
-            );
-            alert("Perfil actualizado exitosamente");
-            // Update local storage with new user data
-            localStorage.setItem("user", JSON.stringify(res.data));
-            setUser(res.data);
-        } catch (err) {
-            console.error("Error al actualizar el perfil:", err);
-            alert("Error al actualizar el perfil");
-        }
+        const response = await axios.get('http://localhost:8000/user/profile', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setUser(response.data);
+      } catch (error) {
+        console.error('Error al obtener el perfil:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    if (!user) return <p className="text-center mt-10">Cargando...</p>;
+    fetchProfile();
+  }, []);
 
-    return (
-        <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg space-y-6">
-            <h1 className='text-2xl font-bold'>Perfil de Usuario</h1>
+  if (loading) return <div className="text-center mt-8">Cargando perfil...</div>;
+  if (!user) return <div className="text-center mt-8 text-red-500">No se pudo cargar el perfil. ¿Iniciaste sesión?</div>;
 
-            <div className='space-y-2 text-gray-700'>
-                <p><strong>Nombre:</strong> {user.name} {user.last_name}</p>
-                <p><strong>Email:</strong> {user.email}</p>
-                <p><strong>Rol:</strong> {user.role == "admin" ? "Profesor" : "Estudiante"}</p>
-                <p><strong>Cursos:</strong> {user.group || "No asignado"}</p>
-            </div>
+  const roleLabel = user.role.toLowerCase() === 'admin' ? 'Profesor' : 'Estudiante';
 
-            <div className='mt-4'>
-                <h2 className='font-semibold text-lg'>Progreso del Curso</h2>
-                <div className='w-full bg-gray-200 rounded-full h-4'>
-                    <div
-                        className="bg-green-500 h-4 rounded-full"
-                        style={{ width: `${progress}%` }}
-                    />
-                </div>
-                <p className='text-sm text-gray-600 mt-1'>{progress}% completado</p>
-            </div>
+  return (
+    <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      {/* <h1 className="text-2xl font-bold mb-4">Perfil de {roleLabel}</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <p><strong>Nombre:</strong> {user.name} {user.last_name}</p>
+        <p><strong>Correo:</strong> {user.email}</p>
+        <p><strong>Documento:</strong> {user.type_document} {user.document}</p>
+        <p><strong>Grupo:</strong> {user.group || 'No asignado'}</p>
+        <p><strong>Rol:</strong> {user.role}</p>
+        <p><strong>Estado:</strong> {user.status ? 'Activo' : 'Inactivo'}</p>
+      </div> */}
 
-            <div className='mt-6'>
-                <h2 className='font-semibold text-lg'>Actualizar Información</h2>
-                <div className='flex flex-col gap-4 mt-2'>
-                    <input 
-                        type="email"
-                        placeholder='Nuevo correo'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="border px-3 py-2 rounded"
-                    />
-                    <input 
-                        type="password"
-                        placeholder='Nueva contraseña'
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="border px-3 py-2 rounded"
-                    />
-                    <button
-                        onClick={handleUpdate}
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-                    >
-                        Actualizar Perfil
-                    </button>
-                </div>
-            </div>
-
+      {roleLabel === 'estudiante' && (
+        <div className="mt-6">
+          <h2 className="text-xl font-semibold mb-2">Progreso del estudiante</h2>
+          {user.progress ? (
+            <>
+              <p><strong>Puntuación:</strong> {user.progress.score}</p>
+              <p><strong>Comentarios:</strong> {user.progress.comment || 'Sin comentarios'}</p>
+            </>
+          ) : (
+            <p>No hay progreso registrado.</p>
+          )}
         </div>
-    )
+      )}
+
+      {roleLabel === 'profesor' && (
+        <div className="mt-6">
+          <h2 className="text-xl font-semibold mb-2">Herramientas de profesor</h2>
+          <ul className="list-disc pl-6">
+            <li>Gestión de clases</li>
+            <li>Visualización de progreso estudiantil</li>
+            <li>Evaluaciones</li>
+          </ul>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default Profile;
