@@ -1,6 +1,7 @@
 from app.db.database import Base
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from datetime import datetime
+from sqlalchemy.orm import relationship
 
 class User(Base):
     __tablename__ = "users"
@@ -15,3 +16,4 @@ class User(Base):
     role = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
     status = Column(Boolean, default=True)
+    progress = relationship("StudentProgress", back_populates="user", uselist=False)

@@ -14,11 +14,14 @@ export default function Classes() {
             return;
         }
 
-        // Fetch classes from backend
-        fetch("http://localhost:8000/docs#/Clases/update_existing_class_classes__class_id__put")
-            .then(res => res.json())
-            .then(data => setClasses(data))
-            .catch(err => console.error("Error al cargar las clases:", err));
+        fetch("http://localhost:8000/classes/read", {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+    })
+        .then(res => res.json())
+        .then(data => setClasses(data))
+        .catch(err => console.error("Error al cargar las clases:", err));
     }, [navigate]);
 
     return (

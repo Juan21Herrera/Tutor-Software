@@ -18,7 +18,7 @@ class ClassUpdate(BaseModel):
     exercises: Optional[str] = None
     exams: Optional[str] = None
     recommendations: Optional[str] = None
-    is_active: Optional[str] = None
+    is_active: Optional[bool] = None
 
 class ClassCreate(ClassBase):
     pass
@@ -29,6 +29,7 @@ class ClassOut(ClassBase):
     updated_at: datetime
     is_active: bool
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
 

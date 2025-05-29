@@ -40,8 +40,7 @@ export default function Header() {
 
         <span
             onClick={() => {
-                const token = localStorage.getItem("token");
-                navigate(token ? "/classes" : "/login");
+                navigate("/classes");
             }}
             className="hover:underline cursor-pointer"
         >
@@ -50,8 +49,7 @@ export default function Header() {
 
         <span
             onClick={() => {
-                const token = localStorage.getItem("token");
-                navigate(token ? "/exercises" : "/login");
+                navigate("/exercises");
             }}
             className="hover:underline cursor-pointer"
         >

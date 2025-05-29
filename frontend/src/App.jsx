@@ -4,6 +4,15 @@ import Home from './pages/global/Home'
 import Register from './pages/auth/Register'
 import Login from './pages/auth/Login'
 import Classes from './pages/student/Classes'
+import Profile from './pages/global/Profile'
+import ProtectedRoutes from './components/Auth/ProtectedRoutes'
+import PublicRoutes from './components/Auth/PublicRoutes'
+import Excercises from './pages/student/Excercises'
+// import Recommendation from './pages/student/Recommendation'
+// import Diagnostic from './pages/student/Diagnostic'
+// import Evaluation from './pages/student/Evaluation'
+// import Learning from './pages/student/Learning'
+// import Dashboard from './pages/admin/Dashboard'
 import './App.css'
 
 function App() {
@@ -14,23 +23,23 @@ function App() {
 
         {/* Public Routes */}
         <Route path="/" element={<Home />}/>
-        <Route path="/login" element={<Login />}/>
-        <Route path="/register" element={<Register />}/>
-        {/* <Route path="/forgot" element={<Forgot />}/> */}
+        <Route path="/login" element={<PublicRoutes><Login /></PublicRoutes>}/>
+        <Route path="/register" element={<PublicRoutes><Register /></PublicRoutes>}/>
+        {/* <Route path="/forgot" element={<PublicRoutes><Forgot /></PublicRoutes>}/> */}
 
         {/* Global Routes */}
-        {/* <Route path="/profile" element={<Profile />}/> */}
+        <Route path="/profile" element={<ProtectedRoutes><Profile /></ProtectedRoutes>}/>
 
         {/* Student Routes */}
-        {/* <Route path="/diagnostic" element={<Diagnostic />}/>
-        <Route path="/evaluation" element={<Evaluation />}/>
-        <Route path="/learning" element={<Learning />}/>
-        <Route path="/exercises" element={<Excercises />}/>
-        <Route path="/recommendation" element={<Recommendation />}/> */}
-        <Route path="/classes" element={<Classes />}/>
+        {/* <Route path="/diagnostic" element={<ProtectedRoutes><Diagnostic /></ProtectedRoutes>}/>
+        <Route path="/evaluation" element={<ProtectedRoutes><Evaluation /></ProtectedRoutes>}/>
+        <Route path="/learning" element={<ProtectedRoutes><Learning /></ProtectedRoutes>}/>*/}
+        <Route path="/exercises" element={<ProtectedRoutes><Excercises /></ProtectedRoutes>}/>
+        {/* <Route path="/recommendation" element={<ProtectedRoutes><Recommendation /></ProtectedRoutes>}/>  */}
+        <Route path="/classes" element={<ProtectedRoutes><Classes /></ProtectedRoutes>}/>
 
         {/* Admin Routes */}
-        {/* <Route path="/dashboard" element={<Dashboard />}/> */}
+        {/* <Route path="/dashboard" element={<ProtectedRoutes><Dashboard /></ProtectedRoutes>}/> */}
       </Routes>
       
     </Router>
