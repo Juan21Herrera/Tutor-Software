@@ -24,6 +24,7 @@ function Profile() {
         setUser(response.data);
       } catch (error) {
         console.error('Error al obtener el perfil:', error);
+        alert(error?.response?.data?.detail || 'Error al cargar el perfil');
       } finally {
         setLoading(false);
       }

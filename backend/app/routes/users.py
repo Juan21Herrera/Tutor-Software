@@ -10,6 +10,8 @@ from app.schemas.users import UserOut
 from app.routes.auth import get_current_user
 from app.models.db_progress import StudentProgress
 from app.models.db_courses import Course
+from app.schemas.users import StudentProfileResponse, TeacherProfileResponse
+from app.schemas.users import UserProfileOut, CourseInfo
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -94,40 +96,50 @@ def update_user(user_id: int, user: User, db: Session = Depends(get_db)):
     db.refresh(existing_user)
     return {"message": "User updated successfully"}
 
-@router.get("/profile", response_model=UserOut)
+@router.get("/profile", response_model=StudentProfileResponse | TeacherProfileResponse)
 def get_profile(current_user: UserModel = Depends(get_current_user), db: Session = Depends(get_db)):
     if current_user.role.lower() == "estudiante":
         progress = db.query(StudentProgress).filter(StudentProgress.user_id == current_user.id).first()
         return {
             "role": "Estudiante",
-            "profile": {
-                "id": current_user.id,
-                "name": current_user.name,
-                "last_name": current_user.last_name,
-                "email": current_user.email,
-                "type_document": current_user.type_document,
-                "document": current_user.document,
-                "group": current_user.group,
-                "status": current_user.status,
-                "created_at": current_user.created_at,
-            },
-            "progress": progress.progress if progress else None,
+            "profile": UserProfileOut(
+                id=current_user.id,
+                name=current_user.name,
+                last_name=current_user.last_name,
+                email=current_user.email,
+                type_document=current_user.type_document,
+                document=current_user.document,
+                group=current_user.group,
+                status=current_user.status,
+                created_at=current_user.created_at,
+            ),
+            "progress": float(progress.progress) if progress else None,
             "comments": progress.comments if progress and progress.comments else None
         }
     elif current_user.role.lower() == "profesor":
         courses = db.query(Course).filter(Course.teacher_id == current_user.id).all()
+        courses_summary = []
+        for course in courses:
+            students_count = db.query(UserModel).filter(UserModel.group == course.title, UserModel.role == "Estudiante").count()
+            courses_summary.append(CourseInfo(
+                id=course.id,
+                title=course.title,
+                students=None,  # O una lista si quieres incluir estudiantes
+                students_count=students_count
+            ))
         return {
             "role": "Profesor",
-            "profile": {
-                "id": current_user.id,
-                "name": current_user.name,
-                "last_name": current_user.last_name,
-                "email": current_user.email,
-                "type_document": current_user.type_document,
-                "document": current_user.document,
-                "status": current_user.status,
-                "created_at": current_user.created_at,
-            },
-            "courses": [{"id": course.id, "title": course.title, "students": course.students} for course in courses]
+            "profile": UserProfileOut(
+                id=current_user.id,
+                name=current_user.name,
+                last_name=current_user.last_name,
+                email=current_user.email,
+                type_document=current_user.type_document,
+                document=current_user.document,
+                group=current_user.group,
+                status=current_user.status,
+                created_at=current_user.created_at,
+            ),
+            "courses": courses_summary
         }
     raise HTTPException(status_code=400, detail="Invalid role")

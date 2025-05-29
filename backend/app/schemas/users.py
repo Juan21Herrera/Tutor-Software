@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, model_validator
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 # User Model (Class)
 
@@ -50,3 +50,30 @@ class UserOut(BaseModel):
     role: str
     status: bool
     created_at: datetime
+
+class UserProfileOut(BaseModel):
+    id: int
+    name: str
+    last_name: str
+    email: EmailStr
+    type_document: str
+    document: int
+    group: Optional[str] = None
+    status: bool
+    created_at: datetime
+
+class CourseInfo(BaseModel):
+    id: int
+    title: str
+    students: Optional[List[dict]]
+
+class StudentProfileResponse(BaseModel):
+    role: str
+    profile: UserProfileOut
+    progress: Optional[float] = None
+    comments: Optional[str] = None
+
+class TeacherProfileResponse(BaseModel):
+    role: str
+    profile: UserProfileOut
+    courses: Optional[List[CourseInfo]] = None
