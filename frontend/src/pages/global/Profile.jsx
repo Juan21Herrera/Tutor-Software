@@ -35,27 +35,28 @@ function Profile() {
   if (loading) return <div className="text-center mt-8">Cargando perfil...</div>;
   if (!user) return <div className="text-center mt-8 text-red-500">No se pudo cargar el perfil. ¿Iniciaste sesión?</div>;
 
+  const { profile, role, progress, comments, courses } = user;
   const roleLabel = user.role.toLowerCase() === 'admin' ? 'Profesor' : 'Estudiante';
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      {/* <h1 className="text-2xl font-bold mb-4">Perfil de {roleLabel}</h1>
+      <h1 className="text-2xl font-bold mb-4">Perfil de {roleLabel}</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <p><strong>Nombre:</strong> {user.name} {user.last_name}</p>
-        <p><strong>Correo:</strong> {user.email}</p>
-        <p><strong>Documento:</strong> {user.type_document} {user.document}</p>
-        <p><strong>Grupo:</strong> {user.group || 'No asignado'}</p>
-        <p><strong>Rol:</strong> {user.role}</p>
-        <p><strong>Estado:</strong> {user.status ? 'Activo' : 'Inactivo'}</p>
-      </div> */}
+        <p><strong>Nombre:</strong> {profile.name} {profile.last_name}</p>
+        <p><strong>Correo:</strong> {profile.email}</p>
+        <p><strong>Documento:</strong> {profile.type_document} {profile.document}</p>
+        {roleLabel == 'Estudiante' && <p><strong>Grupo:</strong> {profile.group || 'No asignado'}</p>}
+        <p><strong>Rol:</strong> {role}</p>
+        <p><strong>Estado:</strong> {profile.status ? 'Activo' : 'Inactivo'}</p>
+      </div>
 
-      {roleLabel === 'estudiante' && (
+      {roleLabel === 'Estudiante' && (
         <div className="mt-6">
           <h2 className="text-xl font-semibold mb-2">Progreso del estudiante</h2>
-          {user.progress ? (
+          {progress ? (
             <>
-              <p><strong>Puntuación:</strong> {user.progress.score}</p>
-              <p><strong>Comentarios:</strong> {user.progress.comment || 'Sin comentarios'}</p>
+              <p><strong>Puntuación:</strong> {progress}</p>
+              <p><strong>Comentarios:</strong> {comments || 'Sin comentarios'}</p>
             </>
           ) : (
             <p>No hay progreso registrado.</p>
@@ -63,14 +64,18 @@ function Profile() {
         </div>
       )}
 
-      {roleLabel === 'profesor' && (
+      {roleLabel === 'Profesor' && (
         <div className="mt-6">
-          <h2 className="text-xl font-semibold mb-2">Herramientas de profesor</h2>
-          <ul className="list-disc pl-6">
-            <li>Gestión de clases</li>
-            <li>Visualización de progreso estudiantil</li>
-            <li>Evaluaciones</li>
-          </ul>
+          <h2 className="text-xl font-semibold mb-2">Cursos a cargo</h2>
+          {courses?.length > 0 ? (
+            <ul className='list-disc pl-6'>
+              {courses.map((course) => (
+                <li key={course.id}>{course.title} ({course.students.length} estudiantes)</li>
+              ))}
+            </ul>
+          ) : (
+            <p>No hay cursos asignados.</p>
+          )}
         </div>
       )}
     </div>
