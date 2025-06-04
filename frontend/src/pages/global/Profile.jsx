@@ -17,7 +17,7 @@ function Profile() {
           return;
         }
 
-        const response = await axios.get('http://localhost:8000/user/profile', {
+        const response = await axios.get('https://backend-tutor-software.onrender.com/user/profile', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

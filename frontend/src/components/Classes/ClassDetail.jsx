@@ -6,7 +6,7 @@ const ClassDetail = () => {
   const [classData, setClassData] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/classes/${id}`)
+    fetch(`https://backend-tutor-software.onrender.com//classes/${id}`)
       .then(res => res.json())
       .then(data => setClassData(data));
   }, [id]);

@@ -14,7 +14,7 @@ export default function Classes() {
             return;
         }
 
-        fetch("http://localhost:8000/classes/read", {
+        fetch("https://backend-tutor-software.onrender.com/classes/read", {
         headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

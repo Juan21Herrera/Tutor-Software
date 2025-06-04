@@ -10,7 +10,7 @@ export default function ClassDetail() {
     useEffect(() => {
         const token = localStorage.getItem("token");
 
-        fetch(`http://localhost:8000/classes/${id}`, {
+        fetch(`https://backend-tutor-software.onrender.com/classes/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
