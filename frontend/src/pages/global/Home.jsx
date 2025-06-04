@@ -1,5 +1,5 @@
 import Hero from '../global/components/Hero';
-import Data from '../global/components/data';
+import Data from '../global/components/Data';
 import Header from '../../components/nav/Header'
 import Footer from '../../components/nav/Footer';
 

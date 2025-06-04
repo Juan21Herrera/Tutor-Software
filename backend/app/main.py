@@ -18,7 +18,7 @@ app.include_router(users.router)
 app.include_router(progress.router)
 @app.get("/")
 def welcome_root():
-    return {"message": "Welcome to the FastAPI application!"}
+    return {"message": "Welcome to the FastAPI application! It's Running!"}
 
 
 app.add_middleware(
