@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Header from '../../components/nav/Header';
+import Footer from '../../components/nav/Footer';
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -40,6 +42,8 @@ function Profile() {
   const roleLabel = user.role.toLowerCase() === 'admin' ? 'Profesor' : 'Estudiante';
 
   return (
+    <section>
+      <Header />
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-4">Perfil de {roleLabel}</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -80,6 +84,8 @@ function Profile() {
         </div>
       )}
     </div>
+    <Footer />
+    </section>
   );
 }
 

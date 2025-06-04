@@ -8,6 +8,7 @@ import Profile from './pages/global/Profile'
 import ProtectedRoutes from './components/Auth/ProtectedRoutes'
 import PublicRoutes from './components/Auth/PublicRoutes'
 import Excercises from './pages/student/Excercises'
+import ClassDetail from './pages/student/ClassDetail'
 // import Recommendation from './pages/student/Recommendation'
 // import Diagnostic from './pages/student/Diagnostic'
 // import Evaluation from './pages/student/Evaluation'
@@ -18,7 +19,7 @@ import './App.css'
 function App() {
 
   return (
-    <Router>
+    
       <Routes>
 
         {/* Public Routes */}
@@ -37,12 +38,13 @@ function App() {
         <Route path="/exercises" element={<ProtectedRoutes><Excercises /></ProtectedRoutes>}/>
         {/* <Route path="/recommendation" element={<ProtectedRoutes><Recommendation /></ProtectedRoutes>}/>  */}
         <Route path="/classes" element={<ProtectedRoutes><Classes /></ProtectedRoutes>}/>
+        <Route path="/classes/:id" element={<ProtectedRoutes><ClassDetail /></ProtectedRoutes>} />
 
         {/* Admin Routes */}
         {/* <Route path="/dashboard" element={<ProtectedRoutes><Dashboard /></ProtectedRoutes>}/> */}
       </Routes>
       
-    </Router>
+    
   )
 }
 

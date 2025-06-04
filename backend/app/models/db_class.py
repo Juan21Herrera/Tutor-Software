@@ -11,7 +11,7 @@ class Class(Base):
     content_url = Column(String, nullable=True)
     exercises = Column(Text, nullable=True)
     exams = Column(Text, nullable=True)
-    recommendations = Column(Text, nullable=True)
+    recommendations = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.now())
     updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
     is_active = Column(Boolean, default=True)

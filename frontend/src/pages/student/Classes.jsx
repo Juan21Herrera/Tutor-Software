@@ -32,14 +32,17 @@ export default function Classes() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Classes Map */}
-                {classes.map((cls, index) => (
+                {classes.map((cls) => (
                     <div 
-                        key={index}
+                        key={cls.id}
                         className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition"
                     >
-                        <h2 className="text-2xl font-semibold mb-2">{cls.name}</h2>
+                        <h2 className="text-2xl font-semibold mb-2">{cls.title}</h2>
                         <p className="text-gray-600">{cls.description}</p>
-                        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        <button 
+                            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            onClick={() => navigate(`/classes/${cls.id}`)}
+                        >
                             Ver clase
                         </button>
                     </div>
